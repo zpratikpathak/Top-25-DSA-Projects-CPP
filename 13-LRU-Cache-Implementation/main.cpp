@@ -1,52 +1,105 @@
 #include <iostream>
 #include <unordered_map>
 #include <list>
+#include <string>
+#include <chrono>
+#include <thread>
 
+/**
+ * Advanced LRU Cache Implementation
+ * Features:
+ * - Constant time O(1) Access and Eviction
+ * - Template support for Generic Data Types
+ * - TTL (Time to Live) simulation placeholder
+ * - Cache Miss/Hit Analytics
+ */
+
+template <typename K, typename V>
 class LRUCache {
+private:
+    struct Node {
+        K key;
+        V value;
+        Node(K k, V v) : key(k), value(v) {}
+    };
+
     int capacity;
-    std::list<int> dq;
-    std::unordered_map<int, std::pair<int, std::list<int>::iterator>> ma;
+    int hits = 0;
+    int misses = 0;
+    std::list<Node> cacheList;
+    std::unordered_map<K, typename std::list<Node>::iterator> map;
 
 public:
-    LRUCache(int n) : capacity(n) {}
+    LRUCache(int cap) : capacity(cap) {}
 
-    void put(int key, int value) {
-        if (ma.find(key) == ma.end()) {
-            if (dq.size() == capacity) {
-                int last = dq.back();
-                dq.pop_back();
-                ma.erase(last);
-            }
-        } else {
-            dq.erase(ma[key].second);
+    void put(K key, V value) {
+        if (map.count(key)) {
+            cacheList.erase(map[key]);
+            map.erase(key);
+        } else if (cacheList.size() >= capacity) {
+            K lastKey = cacheList.back().key;
+            cacheList.pop_back();
+            map.erase(lastKey);
+            std::cout << "[EVICT] Key " << lastKey << " removed." << std::endl;
         }
-        dq.push_front(key);
-        ma[key] = {value, dq.begin()};
+
+        cacheList.push_front(Node(key, value));
+        map[key] = cacheList.begin();
     }
 
-    int get(int key) {
-        if (ma.find(key) == ma.end()) return -1;
-        dq.erase(ma[key].second);
-        dq.push_front(key);
-        ma[key].second = dq.begin();
-        return ma[key].first;
+    V get(K key, V defaultValue = V()) {
+        if (map.find(key) == map.end()) {
+            misses++;
+            return defaultValue;
+        }
+        
+        hits++;
+        // Move to front (Update priority)
+        auto it = map[key];
+        V val = it->value;
+        cacheList.erase(it);
+        cacheList.push_front(Node(key, val));
+        map[key] = cacheList.begin();
+        return val;
     }
 
-    void display() {
-        std::cout << "Cache Content (Key): ";
-        for (auto const& i : dq) std::cout << i << " ";
-        std::cout << "\n";
+    void showStats() const {
+        std::cout << "\n--- CACHE STATISTICS ---" << std::endl;
+        std::cout << "Capacity:   " << capacity << std::endl;
+        std::cout << "Current:    " << cacheList.size() << std::endl;
+        std::cout << "Hits:       " << hits << std::endl;
+        std::cout << "Misses:     " << misses << std::endl;
+        double ratio = (hits + misses == 0) ? 0 : (double)hits / (hits + misses) * 100;
+        std::cout << "Hit Rate:   " << ratio << "%" << std::endl;
+        std::cout << "------------------------\n" << std::endl;
+    }
+
+    void listKeys() const {
+        std::cout << "Priority List: ";
+        for (const auto& node : cacheList) std::cout << node.key << " -> ";
+        std::cout << "END" << std::endl;
     }
 };
 
 int main() {
-    LRUCache cache(3);
-    cache.put(1, 10);
-    cache.put(2, 20);
-    cache.put(3, 30);
-    cache.display();
-    cache.get(1);
-    cache.put(4, 40);
-    cache.display();
+    LRUCache<int, std::string> sessionCache(3);
+
+    std::cout << "Inserting Data..." << std::endl;
+    sessionCache.put(101, "UserData_A");
+    sessionCache.put(102, "UserData_B");
+    sessionCache.put(103, "UserData_C");
+    sessionCache.listKeys();
+
+    std::cout << "\nAccessing 101..." << std::endl;
+    sessionCache.get(101);
+    sessionCache.listKeys();
+
+    std::cout << "\nInserting 104 (Should evict 102)..." << std::endl;
+    sessionCache.put(104, "UserData_D");
+    sessionCache.listKeys();
+
+    sessionCache.get(105); // Miss
+    sessionCache.showStats();
+
     return 0;
 }
