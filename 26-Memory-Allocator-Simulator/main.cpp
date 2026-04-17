@@ -18,9 +18,15 @@ public:
     void allocate(int size) {
         for (auto& b : blocks) {
             if (b.free && b.size >= size) {
-                b.free = false;
+                if (b.size > size) {
+                    int remaining = b.size - size;
+                    b.size = size;
+                    b.free = false;
+                    blocks.push_back(Block(remaining));
+                } else {
+                    b.free = false;
+                }
                 std::cout << "Allocated " << size << " bytes.\n";
-                // Simplification: Not splitting blocks here
                 return;
             }
         }
