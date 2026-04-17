@@ -1,67 +1,114 @@
 #include <iostream>
 #include <vector>
+#include <cmath>
+#include <algorithm>
+#include <bitset>
 
-#define N 9
+/**
+ * Advanced Sudoku Solver
+ * Features:
+ * - Bitmasking optimization for O(1) safety checks
+ * - Forward Checking (Pruning the search space)
+ * - Minimum Remaining Values (MRV) Heuristic
+ * - Solving complex 9x9 grids with minimal recursion depth
+ */
 
 class SudokuSolver {
-    int grid[N][N];
+private:
+    int grid[9][9];
+    std::bitset<10> rows[9], cols[9], boxes[9];
 
-public:
-    SudokuSolver(int inputGrid[N][N]) {
-        for(int i=0; i<N; i++) for(int j=0; j<N; j++) grid[i][j] = inputGrid[i][j];
+    int getBox(int r, int c) { return (r / 3) * 3 + (c / 3); }
+
+    bool findBestCell(int& row, int& col) {
+        int minChoices = 10;
+        bool found = false;
+        for (int r = 0; r < 9; ++r) {
+            for (int c = 0; c < 9; ++c) {
+                if (grid[r][c] == 0) {
+                    int choices = 0;
+                    std::bitset<10> used = rows[r] | cols[c] | boxes[getBox(r, c)];
+                    for (int n = 1; n <= 9; ++n) if (!used[n]) choices++;
+                    
+                    if (choices < minChoices) {
+                        minChoices = choices;
+                        row = r; col = c;
+                        found = true;
+                    }
+                }
+            }
+        }
+        return found;
     }
 
-    bool isSafe(int row, int col, int num) {
-        for (int x = 0; x < 9; x++) if (grid[row][x] == num) return false;
-        for (int x = 0; x < 9; x++) if (grid[x][col] == num) return false;
-        int startRow = row - row % 3, startCol = col - col % 3;
-        for (int i = 0; i < 3; i++)
-            for (int j = 0; j < 3; j++)
-                if (grid[i + startRow][j + startCol] == num) return false;
-        return true;
+public:
+    SudokuSolver(int input[9][9]) {
+        for (int r = 0; r < 9; ++r) {
+            for (int c = 0; c < 9; ++c) {
+                grid[r][c] = input[r][c];
+                if (grid[r][c] != 0) {
+                    int n = grid[r][c];
+                    rows[r].set(n);
+                    cols[c].set(n);
+                    boxes[getBox(r, c)].set(n);
+                }
+            }
+        }
     }
 
     bool solve() {
-        int row, col;
-        bool empty = false;
-        for (row = 0; row < N; row++) {
-            for (col = 0; col < N; col++) {
-                if (grid[row][col] == 0) { empty = true; break; }
-            }
-            if (empty) break;
-        }
-        if (!empty) return true;
+        int r, c;
+        if (!findBestCell(r, c)) return true; // All cells filled
 
-        for (int num = 1; num <= 9; num++) {
-            if (isSafe(row, col, num)) {
-                grid[row][col] = num;
+        std::bitset<10> used = rows[r] | cols[c] | boxes[getBox(r, c)];
+        for (int n = 1; n <= 9; ++n) {
+            if (!used[n]) {
+                grid[r][c] = n;
+                rows[r].set(n); cols[c].set(n); boxes[getBox(r, c)].set(n);
+
                 if (solve()) return true;
-                grid[row][col] = 0;
+
+                // Backtrack
+                grid[r][c] = 0;
+                rows[r].reset(n); cols[c].reset(n); boxes[getBox(r, c)].reset(n);
             }
         }
         return false;
     }
 
-    void print() {
-        for (int i = 0; i < N; i++) {
-            for (int j = 0; j < N; j++) std::cout << grid[i][j] << " ";
+    void display() {
+        std::cout << "\n--- SOLVED SUDOKU GRID ---\n";
+        for (int r = 0; r < 9; ++r) {
+            if (r % 3 == 0 && r != 0) std::cout << "------+-------+------\n";
+            for (int c = 0; c < 9; ++c) {
+                if (c % 3 == 0 && c != 0) std::cout << "| ";
+                std::cout << grid[r][c] << " ";
+            }
             std::cout << "\n";
         }
     }
 };
 
 int main() {
-    int board[N][N] = { {3, 0, 6, 5, 0, 8, 4, 0, 0},
-                        {5, 2, 0, 0, 0, 0, 0, 0, 0},
-                        {0, 8, 7, 0, 0, 0, 0, 3, 1},
-                        {0, 0, 3, 0, 1, 0, 0, 8, 0},
-                        {9, 0, 0, 8, 6, 3, 0, 0, 5},
-                        {0, 5, 0, 0, 9, 0, 6, 0, 0},
-                        {1, 3, 0, 0, 0, 0, 2, 5, 0},
-                        {0, 0, 0, 0, 0, 0, 0, 7, 4},
-                        {0, 0, 5, 2, 0, 6, 3, 0, 0} };
-    SudokuSolver ss(board);
-    if (ss.solve()) ss.print();
-    else std::cout << "No solution exists";
+    // An extremely hard Sudoku puzzle
+    int board[9][9] = {
+        {8, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 3, 6, 0, 0, 0, 0, 0},
+        {0, 7, 0, 0, 9, 0, 2, 0, 0},
+        {0, 5, 0, 0, 0, 7, 0, 0, 0},
+        {0, 0, 0, 0, 4, 5, 7, 0, 0},
+        {0, 0, 0, 1, 0, 0, 0, 3, 0},
+        {0, 0, 1, 0, 0, 0, 0, 6, 8},
+        {0, 0, 8, 5, 0, 0, 0, 1, 0},
+        {0, 9, 0, 0, 0, 0, 4, 0, 0}
+    };
+
+    SudokuSolver solver(board);
+    if (solver.solve()) {
+        solver.display();
+    } else {
+        std::cout << "No solution exists for the given grid." << std::endl;
+    }
+
     return 0;
 }
