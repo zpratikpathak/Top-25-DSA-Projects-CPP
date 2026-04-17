@@ -1,56 +1,50 @@
-# Top 25+ DSA Projects in C++ 🚀
+# Top 25+ DSA Projects in C++ (High Complexity Edition) 🚀
 
-Welcome to the ultimate repository for high-performance C++ projects focused on **Data Structures and Algorithms (DSA)**. This collection features 26 unique, complex implementations covering everything from fundamental structures to advanced algorithmic logic.
+Welcome to the definitive repository for advanced C++ projects focused on **Data Structures and Algorithms (DSA)**. Every project in this collection has been engineered to showcase high-fidelity logic, optimal time/space complexity, and professional coding patterns.
 
-## 📂 Project Directory
+## 📂 Project Matrix (Complex Implementations)
 
-| # | Project Name | Primary DSA | Solution |
-|---|--------------|-------------|----------|
-| 01 | [Student Record System](./01-Student-Record-System) | Linked List/Hashing | [View Code](./01-Student-Record-System) |
-| 02 | [Snake Game Logic](./02-Snake-Game-Logic) | Queues/Coordinate Geometry | [View Code](./02-Snake-Game-Logic) |
-| 03 | [Library Management System](./03-Library-Management-System) | Trees/B-Trees | [View Code](./03-Library-Management-System) |
-| 04 | [Sudoku Solver](./04-Sudoku-Solver) | Backtracking | [View Code](./04-Sudoku-Solver) |
-| 05 | [Dijkstra Pathfinding Visualizer](./05-Dijkstra-Pathfinding-Visualizer) | Graphs | [View Code](./05-Dijkstra-Pathfinding-Visualizer) |
-| 06 | [Huffman Coding Compression](./06-Huffman-Coding-Compression) | Greedy Algorithms/Trees | [View Code](./06-Huffman-Coding-Compression) |
-| 07 | [File System Simulator](./07-File-System-Simulator) | Tree Structures | [View Code](./07-File-System-Simulator) |
-| 08 | [Bank Management System](./08-Bank-Management-System) | File Handling/Hashing | [View Code](./08-Bank-Management-System) |
-| 09 | [Social Network Analysis](./09-Social-Network-Analysis) | Graph Theory/Centrality | [View Code](./09-Social-Network-Analysis) |
-| 10 | [Text Editor Engine](./10-Text-Editor-Engine) | Doubly Linked List/Stacks | [View Code](./10-Text-Editor-Engine) |
-| 11 | [Search Engine Indexer](./11-Search-Engine-Indexer) | Trie Data Structure | [View Code](./11-Search-Engine-Indexer) |
-| 12 | [Stock Span Analyzer](./12-Stock-Span-Analyzer) | Stacks | [View Code](./12-Stock-Span-Analyzer) |
-| 13 | [LRU Cache Implementation](./13-LRU-Cache-Implementation) | Hash Maps/Doubly Linked List | [View Code](./13-LRU-Cache-Implementation) |
-| 14 | [Expression Tree Evaluator](./14-Expression-Tree-Evaluator) | Stacks/Trees | [View Code](./14-Expression-Tree-Evaluator) |
-| 15 | [Contact Book with Trie](./15-Contact-Book-with-Trie) | Tries | [View Code](./15-Contact-Book-with-Trie) |
-| 16 | [Chess Move Validator](./16-Chess-Move-Validator) | Matrix/Logic | [View Code](./16-Chess-Move-Validator) |
-| 17 | [A Star Pathfinder](./17-A-Star-Pathfinder) | Heuristic Graphs | [View Code](./17-A-Star-Pathfinder) |
-| 18 | [N Queens Visualizer](./18-N-Queens-Visualizer) | Recursion/Backtracking | [View Code](./18-N-Queens-Visualizer) |
-| 19 | [Inventory Management System](./19-Inventory-Management-System) | Min-Max Heaps | [View Code](./19-Inventory-Management-System) |
-| 20 | [Shortest Path in Cities](./20-Shortest-Path-in-Cities) | Flyod-Warshall/Graphs | [View Code](./20-Shortest-Path-in-Cities) |
-| 21 | [Task Scheduler](./21-Task-Scheduler) | Priority Queues/Heaps | [View Code](./21-Task-Scheduler) |
-| 22 | [Autocomplete System](./22-Autocomplete-System) | Tries | [View Code](./22-Autocomplete-System) |
-| 23 | [Packet Routing Simulator](./23-Packet-Routing-Simulator) | Graph Algorithms | [View Code](./23-Packet-Routing-Simulator) |
-| 24 | [Calendar and Event Planner](./24-Calendar-and-Event-Planner) | Red-Black Trees | [View Code](./24-Calendar-and-Event-Planner) |
-| 25 | [Encryption Decryption System](./25-Encryption-Decryption-System) | Bitwise/RSA Logic | [View Code](./25-Encryption-Decryption-System) |
-| 26 | [Memory Allocator Simulator](./26-Memory-Allocator-Simulator) | Linked List/Allocation Algorithms | [View Code](./26-Memory-Allocator-Simulator) |
+| # | Project Name | DSA Complexity | Tech Highlights |
+|---|--------------|----------------|-----------------|
+| 01 | [Student Records](./01-Student-Record-System) | **Hash Map / File I/O** | Dynamic Rehashing, O(1) Chaining, Persistent Storage |
+| 02 | [Snake Game](./02-Snake-Game-Logic) | **Queues / Threading** | Thread-safe state, Decoupled Simulation, Scaling Difficulty |
+| 03 | [Library Manager](./03-Library-Management-System) | **AVL Trees** | Self-balancing BST, Smart Pointers, Multi-criteria Search |
+| 04 | [Sudoku Solver](./04-Sudoku-Solver) | **Backtracking++** | MRV Heuristic, Bitmasking Optimization, Forward Checking |
+| 05 | [GPS Navigator](./05-Dijkstra-Pathfinding-Visualizer) | **Graphs (Dijkstra)** | Priority Queue O(E log V), Path Reconstruction, Named Nodes |
+| 06 | [Huffman Engine](./06-Huffman-Coding-Compression) | **Greedy / Trees** | Optimal Code Construction, Full Bitstream Encode/Decode |
+| 07 | [File System Sim](./07-File-System-Simulator) | **Trie / Tree** | Recursive Path Navigation, Unix-like Metadata, File CRUD |
+| 08 | [Bank Core](./08-Bank-Management-System) | **Hashing / OOP** | Transaction Lifecycle, Savings Interest Sim, Statement Audit |
+| 09 | [Social Graph](./09-Social-Network-Analysis) | **Graphs (BFS)** | Influence Centrality, Degrees of Separation, Mutual Recs |
+| 10 | [Text Engine](./10-Text-Editor-Engine) | **Linked List / Stacks** | Command Pattern, Multi-level Undo/Redo, O(1) Edits |
+| 11 | [Search Indexer](./11-Search-Engine-Indexer) | **Inverted Index** | Case-insensitive Tries, Frequency Tracking, Multi-Doc Query |
+| 12 | [Stock Analyzer](./12-Stock-Span-Analyzer) | **Monotonic Stacks** | Linear Time O(N) Processing, Signal Logic, Metrics |
+| 13 | [LRU Cache](./13-LRU-Cache-Implementation) | **Hash-List Hybrid** | Template Generic Support, Eviction Analytics, Hit Rate tracking |
+| 14 | [Expression Tree](./14-Expression-Tree-Evaluator) | **Stacks / Trees** | Shunting-yard, Binary Expression Tree, Numerical Evaluation |
+| 15 | [Contact Trie](./15-Contact-Book-with-Trie) | **Prefix Trees** | Prefix-based Autocomplete, Group Metadata, Case-insensitivity |
+| 16 | [Chess Logic](./16-Chess-Move-Validator) | **Polymorphism** | Recursive Path Clearing, Piece-specific Move Rules |
+| 17 | [A* Pathfinder](./17-A-Star-Pathfinder) | **A* Search** | Euclidean Heuristics, Obstacle Grids, 8-way Movement |
+| 18 | [N-Queens Pro](./18-N-Queens-Visualizer) | **Backtracking** | Exhaustive Multi-Solution Search, Performance Metrics |
+| 19 | [Inventory Pro](./19-Inventory-Management-System) | **Max-Heaps** | Dynamic Restock Alerting, Critical Thresholds, O(1) Lookups |
+| 20 | [Transit Sim](./20-Shortest-Path-in-Cities) | **Floyd-Warshall** | All-Pairs Path Matrix, Named City Mapping, INF Handling |
+| 21 | [OS Scheduler](./21-Task-Scheduler) | **Priority Queues** | Multi-criteria Priority, FCFS Arrival, System Categorization |
+| 22 | [Autocomplete](./22-Autocomplete-System) | **Trie / DFS** | Weighted Rank Ranking, Frequency-based Suggestions |
+| 23 | [Packet Router](./23-Packet-Routing-Simulator) | **Graph Algorithms** | OSPF Dijkstra Sim, Topology Mapping, Latency Costs |
+| 24 | [Event Planner](./24-Calendar-and-Event-Planner) | **Red-Black Trees** | Range-based Date Search, Conflict Detection, Priority Sort |
+| 25 | [Cipher System](./25-Encryption-Decryption-System) | **Bitwise / Crypto** | Multi-layer XOR/Transposition, Integrity Checksums |
+| 26 | [Memory Kernel](./26-Memory-Allocator-Simulator) | **Linked List** | Best-Fit Policy, Coalescing, Dynamic Block Splitting |
 
+## ⚙️ Compilation
 
-## ⚙️ General Requirements
-
-To run these projects, you need:
-- A C++ compiler (GCC/G++, Clang, or MSVC)
-- C++17 standard or higher
-- Make or CMake (optional for some projects)
+All projects require a C++17 compliant compiler:
+```bash
+g++ -std=c++17 main.cpp -o solution
+```
 
 ## 🤝 How to Contribute
 
-We welcome contributions that improve existing projects or add new high-quality DSA implementations!
-
-1.  **Fork the Repository:** Create a personal copy.
-2.  **Create a Folder:** Use the format `XX-Project-Name`.
-3.  **Implement Solution:** Ensure code is clean, commented, and efficient.
-4.  **Add project README:** Must include "How to install" and "How to run".
-5.  **Update Root README:** Add your project to the table above.
-6.  **Pull Request:** Submit your changes for review.
+1.  **Fork the Repository**
+2.  **Ensure Complexity:** We only accept implementations that optimize for both performance and algorithmic depth.
+3.  **PR with Benchmarks:** If possible, include complexity analysis in your README.
 
 ---
 Engineering by 🤖 **EvilReborn**
