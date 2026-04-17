@@ -3,60 +3,115 @@
 #include <map>
 #include <set>
 #include <queue>
+#include <string>
+#include <algorithm>
+#include <iomanip>
 
-class SocialNetwork {
+/**
+ * Advanced Social Network Analysis
+ * Features:
+ * - Graph implementation using Adjacency Lists (std::map)
+ * - BFS for Degrees of Separation (Shortest Path)
+ * - Influence analysis using Degree Centrality
+ * - Mutual friendship recommendation algorithm
+ */
+
+class SocialGraph {
+private:
     std::map<std::string, std::set<std::string>> adj;
 
 public:
-    void addUser(std::string name) {
+    void addUser(const std::string& name) {
         if (adj.find(name) == adj.end()) adj[name] = {};
     }
 
-    void addFriendship(std::string u, std::string v) {
+    void addFriendship(const std::string& u, const std::string& v) {
+        addUser(u); addUser(v);
         adj[u].insert(v);
         adj[v].insert(u);
     }
 
-    void findMutualFriends(std::string u, std::string v) {
-        std::cout << "Mutual friends between " << u << " and " << v << ": ";
-        for (auto const& friend_name : adj[u]) {
-            if (adj[v].count(friend_name)) {
-                std::cout << friend_name << " ";
-            }
-        }
-        std::cout << "\n";
-    }
+    int getDegreesOfSeparation(const std::string& start, const std::string& target) {
+        if (start == target) return 0;
+        if (!adj.count(start) || !adj.count(target)) return -1;
 
-    void suggestFriends(std::string user) {
-        std::cout << "Friend suggestions for " << user << ": ";
-        std::map<std::string, int> counts;
-        for (auto const& friend_name : adj[user]) {
-            for (auto const& fof : adj[friend_name]) {
-                if (fof != user && !adj[user].count(fof)) {
-                    counts[fof]++;
+        std::queue<std::pair<std::string, int>> q;
+        std::set<std::string> visited;
+        
+        q.push({start, 0});
+        visited.insert(start);
+
+        while (!q.empty()) {
+            auto [curr, dist] = q.front(); q.pop();
+            if (curr == target) return dist;
+
+            for (const auto& neighbor : adj[curr]) {
+                if (!visited.count(neighbor)) {
+                    visited.insert(neighbor);
+                    q.push({neighbor, dist + 1});
                 }
             }
         }
-        for (auto const& [name, count] : counts) {
-            std::cout << name << "(" << count << " mutual) ";
+        return -1; // Disconnected
+    }
+
+    void recommendFriends(const std::string& user) {
+        if (!adj.count(user)) return;
+        
+        std::map<std::string, int> mutualCount;
+        for (const auto& friend_name : adj[user]) {
+            for (const auto& fof : adj[friend_name]) {
+                if (fof != user && !adj[user].count(fof)) {
+                    mutualCount[fof]++;
+                }
+            }
         }
-        std::cout << "\n";
+
+        std::vector<std::pair<int, std::string>> sorted;
+        for (auto const& [name, count] : mutualCount) sorted.push_back({count, name});
+        std::sort(sorted.rbegin(), sorted.rend());
+
+        std::cout << "\n--- RECOMMENDATIONS FOR " << user << " ---" << std::endl;
+        for (auto const& [count, name] : sorted) {
+            std::cout << name << " (" << count << " mutual friends)" << std::endl;
+        }
+    }
+
+    void displayInfluenceRank() {
+        std::vector<std::pair<int, std::string>> ranks;
+        for (auto const& [user, friends] : adj) {
+            ranks.push_back({(int)friends.size(), user});
+        }
+        std::sort(ranks.rbegin(), ranks.rend());
+
+        std::cout << "\n--- INFLUENCE RANK (DEGREE CENTRALITY) ---" << std::endl;
+        for (auto const& [score, user] : ranks) {
+            std::cout << std::left << std::setw(15) << user << " Friends: " << score << std::endl;
+        }
     }
 };
 
 int main() {
-    SocialNetwork sn;
-    sn.addUser("Pratik");
-    sn.addUser("Alice");
-    sn.addUser("Bob");
-    sn.addUser("Charlie");
+    SocialGraph net;
 
-    sn.addFriendship("Pratik", "Alice");
-    sn.addFriendship("Alice", "Bob");
-    sn.addFriendship("Bob", "Charlie");
-    sn.addFriendship("Pratik", "Charlie");
+    // Build complex network
+    net.addFriendship("Pratik", "Alice");
+    net.addFriendship("Pratik", "Bob");
+    net.addFriendship("Alice", "Charlie");
+    net.addFriendship("Bob", "Charlie");
+    net.addFriendship("Charlie", "David");
+    net.addFriendship("David", "Eve");
+    net.addFriendship("Eve", "Frank");
+    net.addFriendship("Frank", "Grace");
+    net.addFriendship("Grace", "Heidi");
+    net.addFriendship("Alice", "Frank"); // shortcut
 
-    sn.findMutualFriends("Pratik", "Bob");
-    sn.suggestFriends("Alice");
+    net.displayInfluenceRank();
+    
+    std::cout << "\nDegrees of Separation (Pratik -> Heidi): " 
+              << net.getDegreesOfSeparation("Pratik", "Heidi") << std::endl;
+
+    net.recommendFriends("Pratik");
+
     return 0;
 }
