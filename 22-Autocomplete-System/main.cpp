@@ -2,56 +2,90 @@
 #include <unordered_map>
 #include <vector>
 #include <string>
+#include <memory>
+#include <algorithm>
+
+/**
+ * Advanced Autocomplete System
+ * Features:
+ * - Prefix-based retrieval using Trie
+ * - Search suggestion ranking based on frequency/popularity
+ * - Space-efficient node management using unordered_map
+ * - Interactive-style suggestion feedback
+ */
 
 struct TrieNode {
-    std::unordered_map<char, TrieNode*> children;
-    bool isEndOfWord;
+    std::unordered_map<char, std::shared_ptr<TrieNode>> children;
+    bool isEndOfWord = false;
+    int weight = 0; // Frequency of search/selection
 };
 
-class Autocomplete {
-    TrieNode* root;
+class AutocompleteEngine {
+private:
+    std::shared_ptr<TrieNode> root;
 
-    void collectSuggestions(TrieNode* node, std::string current, std::vector<std::string>& results) {
-        if (node->isEndOfWord) results.push_back(current);
+    void dfs(std::shared_ptr<TrieNode> node, std::string current, std::vector<std::pair<int, std::string>>& suggestions) {
+        if (node->isEndOfWord) suggestions.push_back({node->weight, current});
+        
         for (auto const& [c, child] : node->children) {
-            collectSuggestions(child, current + c, results);
+            dfs(child, current + c, suggestions);
         }
     }
 
 public:
-    Autocomplete() { root = new TrieNode(); }
+    AutocompleteEngine() : root(std::make_shared<TrieNode>()) {}
 
-    void insert(std::string word) {
-        TrieNode* curr = root;
+    void insert(const std::string& word, int weight = 1) {
+        auto curr = root;
         for (char c : word) {
-            if (!curr->children.count(c)) curr->children[c] = new TrieNode();
+            if (!curr->children.count(c)) curr->children[c] = std::make_shared<TrieNode>();
             curr = curr->children[c];
         }
         curr->isEndOfWord = true;
+        curr->weight += weight;
     }
 
-    std::vector<std::string> getSuggestions(std::string prefix) {
-        TrieNode* curr = root;
-        std::vector<std::string> results;
+    void suggest(const std::string& prefix) {
+        auto curr = root;
         for (char c : prefix) {
-            if (!curr->children.count(c)) return {};
+            if (!curr->children.count(c)) {
+                std::cout << "[SYSTEM] No suggestions found for: " << prefix << std::endl;
+                return;
+            }
             curr = curr->children[c];
         }
-        collectSuggestions(curr, prefix, results);
-        return results;
+
+        std::vector<std::pair<int, std::string>> results;
+        dfs(curr, prefix, results);
+
+        // Sort by weight (Popularity)
+        std::sort(results.rbegin(), results.rend());
+
+        std::cout << "\n--- SUGGESTIONS FOR: " << prefix << " ---" << std::endl;
+        int count = 0;
+        for (auto const& [w, s] : results) {
+            std::cout << " > " << s << " (Popularity: " << w << ")" << std::endl;
+            if (++count >= 5) break; // Limit suggestions
+        }
+        std::cout << "------------------------------\n" << std::endl;
     }
 };
 
 int main() {
-    Autocomplete ac;
-    ac.insert("apple");
-    ac.insert("app");
-    ac.insert("application");
-    ac.insert("banana");
+    AutocompleteEngine engine;
 
-    auto suggestions = ac.getSuggestions("app");
-    std::cout << "Suggestions for 'app': ";
-    for (auto const& s : suggestions) std::cout << s << " ";
-    std::cout << "\n";
+    // Build data set
+    engine.insert("apple", 50);
+    engine.insert("application", 120);
+    engine.insert("app store", 80);
+    engine.insert("apply", 30);
+    engine.insert("banana", 100);
+    engine.insert("band", 40);
+    engine.insert("bandwidth", 20);
+
+    engine.suggest("app");
+    engine.suggest("ban");
+    engine.suggest("xyz");
+
     return 0;
 }
